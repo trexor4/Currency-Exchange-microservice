@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Currency Converter</title>
+</head>
+<body>
+  <h1>Currency Converter</h1>
+  <input type="number" id="amount" placeholder="Amount" value="1">
+  <select id="from">
+    <option>USD</option>
+    <option>EUR</option>
+    <option>JPY</option>
+  </select>
+  →
+  <select id="to">
+    <option>EUR</option>
+    <option>USD</option>
+    <option>JPY</option>
+  </select>
+  <button onclick="convert()">Convert</button>
+  <p id="result"></p>
+
+  <script>
+    async function convert() {
+      const from = document.getElementById('from').value;
+      const to = document.getElementById('to').value;
+      const amount = document.getElementById('amount').value;
+
+      try {
+        const res = await fetch(`/convert?from=${from}&to=${to}&amount=${amount}`);
+        const data = await res.json();
+        if (data.error) {
+          document.getElementById('result').textContent = 'Error: ' + data.error;
+        } else {
+          document.getElementById('result').textContent = `${data.amount} ${data.from} = ${data.converted} ${data.to}`;
+        }
+      } catch (err) {
+        document.getElementById('result').textContent = 'Error connecting to service';
+      }
+    }
+  </script>
+</body>
+</html>
